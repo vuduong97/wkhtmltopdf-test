@@ -1,7 +1,9 @@
+require("dotenv").config();
 const compression = require("compression");
 const express = require("express");
 const { default: helmet } = require("helmet");
 const morgan = require("morgan");
+
 const app = express();
 
 // init middlewares
@@ -20,7 +22,6 @@ app.get("/", (req, res, next) => {
 
   return res.status(200).json({
     message: "Welcome Fan TipJS!",
-    metadata: strCompress.repeat(1000),
   });
 });
 
