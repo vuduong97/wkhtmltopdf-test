@@ -20,7 +20,7 @@ app.use(
 );
 
 // init db
-require("./db/init.mongodb");
+// require("./db/init.mongodb");
 // const { checkOverLoad } = require("./helpers/check.connect");
 // checkOverLoad();
 
