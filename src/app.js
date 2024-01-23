@@ -46,6 +46,7 @@ app.get("/test", async (req, res) => {
         debug: true,
         debugJavascript: true,
         disableJavascript: true,
+        output: "example.pdf",
       },
       (error, stream) => {
         if (error) {
@@ -69,6 +70,18 @@ app.get("/test", async (req, res) => {
     "Content-Disposition": 'attachment; filename="example.pdf"',
   });
   res.send(buffer);
+});
+
+app.use("/123", (req, res, next) => {
+  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
+    output: "out.pdf",
+    pageSize: "A4",
+    debug: true,
+  });
+
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+  });
 });
 
 app.use("/", (req, res, next) => {
