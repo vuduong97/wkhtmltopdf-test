@@ -25,6 +25,11 @@ require("./db/init.mongodb");
 // checkOverLoad();
 
 // init routes
+app.use("/", (req, res, next) => {
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+  });
+});
 app.use("/", require("./routes"));
 app.get("/test", async (req, res) => {
   const query = req.query;
