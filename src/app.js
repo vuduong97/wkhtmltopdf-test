@@ -25,11 +25,7 @@ app.use(
 // checkOverLoad();
 
 // init routes
-app.use("/", (req, res, next) => {
-  return res.status(200).json({
-    message: "Welcome Fan TipJS!",
-  });
-});
+
 app.use("/", require("./routes"));
 app.get("/test", async (req, res) => {
   const query = req.query;
@@ -73,6 +69,12 @@ app.get("/test", async (req, res) => {
     "Content-Disposition": 'attachment; filename="example.pdf"',
   });
   res.send(buffer);
+});
+
+app.use("/", (req, res, next) => {
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+  });
 });
 
 // handling error
