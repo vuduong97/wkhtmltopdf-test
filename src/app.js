@@ -50,7 +50,6 @@ app.get("/test", async (req, res) => {
         debug: true,
         debugJavascript: true,
         disableJavascript: true,
-        output: `./public/hehe.pdf`,
       },
       (error, stream) => {
         if (error) {
