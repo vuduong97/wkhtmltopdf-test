@@ -4,8 +4,12 @@ const express = require("express");
 const { default: helmet } = require("helmet");
 const morgan = require("morgan");
 const wkhtmltopdf = require("wkhtmltopdf");
+const path = require("path");
 
 const app = express();
+
+//setting middleware
+app.use(express.static(path.join(__dirname, "../public")));
 
 // init middlewares
 app.use(morgan("dev"));
@@ -26,7 +30,7 @@ app.use(
 
 // init routes
 
-app.use("/", require("./routes"));
+// app.use("/", require("./routes"));
 app.get("/test", async (req, res) => {
   const query = req.query;
   const { url } = query;
@@ -46,7 +50,7 @@ app.get("/test", async (req, res) => {
         debug: true,
         debugJavascript: true,
         disableJavascript: true,
-        output: "example.pdf",
+        output: `./public/hehe.pdf`,
       },
       (error, stream) => {
         if (error) {
