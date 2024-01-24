@@ -162,6 +162,8 @@ app.get("/123", async (req, res, next) => {
       (error, stream) => {
         console.log("🏆 ~ buffer ~ stream:", stream);
 
+        stream.on("end", () => resolve("123"));
+
         // if (error) {
         //   console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
         //   reject(error);
