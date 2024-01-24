@@ -151,17 +151,38 @@ function exportHtml(url, file, options) {
 }
 
 app.get("/123", async (req, res, next) => {
+  const buffer = await new Promise((resolve, reject) => {
+    wkhtmltopdf(
+      "https://vuduong97.github.io/template-html/",
+      {
+        pageSize: "A4",
+        debug: true,
+      },
+      (error, stream) => {
+        if (error) {
+          console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
+          reject(error);
+        } else {
+          const chunks = [];
+          stream.on("data", (chunk) => {
+            chunks.push(chunk);
+          });
+          stream.on("end", () => resolve(Buffer.concat(chunks)));
+          stream.on("error", (err) => {
+            console.log("error", err);
+            reject(err);
+          });
+        }
+      }
+    );
+  });
+
   res.writeHead(200, {
     "Content-Type": "application/pdf",
     "Content-disposition": "attachment;filename=certificate.pdf",
   });
 
-  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
-    pageSize: "A4",
-    debug: true,
-  }).pipe(res);
-
-  console.log("All done");
+  res.send(buffer);
 });
 
 app.use("/", (req, res, next) => {
