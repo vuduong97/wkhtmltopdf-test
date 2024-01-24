@@ -68,6 +68,8 @@ app.get("/test", async (req, res) => {
     );
   });
 
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+
   res.set({
     "Content-Type": "application/pdf",
     "Content-Disposition": 'attachment; filename="example.pdf"',
