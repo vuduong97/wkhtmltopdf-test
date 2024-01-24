@@ -45,11 +45,11 @@ app.get("/test", async (req, res) => {
     wkhtmltopdf(
       url,
       {
-        enableLocalFileAccess: true,
+        // enableLocalFileAccess: true,
+        // debugJavascript: true,
+        // disableJavascript: true,
         pageSize: "A4",
         debug: true,
-        debugJavascript: true,
-        disableJavascript: true,
       },
       (error, stream) => {
         if (error) {
@@ -63,22 +63,28 @@ app.get("/test", async (req, res) => {
             return chunks.push(chunk);
           });
           stream.on("end", () => resolve(Buffer.concat(chunks)));
+          stream.on("error", (err) => {
+            console.log("error", err);
+            reject(err);
+          });
         }
       }
     );
   });
 
+  console.log("🏆 ~ buffer ~ buffer:", buffer);
+
   // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  // res.set({
-  //   "Content-Type": "application/pdf",
-  //   "Content-Disposition": 'attachment; filename="example.pdf"',
-  // });
-  // res.send(buffer);
-
-  return res.status(200).json({
-    message: "Build pdf success!",
+  res.set({
+    "Content-Type": "application/pdf",
+    "Content-Disposition": 'attachment; filename="example.pdf"',
   });
+  res.send(buffer);
+
+  // return res.status(200).json({
+  //   message: "Build pdf success!",
+  // });
 });
 
 app.use("/123", (req, res, next) => {
