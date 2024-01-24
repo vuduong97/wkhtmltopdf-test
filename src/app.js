@@ -9,7 +9,7 @@ const path = require("path");
 const app = express();
 
 //setting middleware
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "..")));
 
 // init middlewares
 app.use(morgan("dev"));
