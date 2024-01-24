@@ -5,6 +5,7 @@ const { default: helmet } = require("helmet");
 const morgan = require("morgan");
 const wkhtmltopdf = require("wkhtmltopdf");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.get("/test", async (req, res) => {
   }
 
   let count = 0;
+
   const buffer = await new Promise((resolve, reject) => {
     wkhtmltopdf(
       url,
@@ -86,6 +88,63 @@ app.get("/test", async (req, res) => {
   //   message: "Build pdf success!",
   // });
 });
+
+app.use("/123", (req, res, next) => {
+  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
+    output: "out.pdf",
+    pageSize: "A4",
+    debug: true,
+  });
+
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+  });
+});
+
+app.get("/pdf", async (req, res) => {
+  const query = req.query;
+  const { url } = query;
+
+  if (!url) {
+    return res.status(400).send("Missing url");
+  }
+
+  const dpi = 270;
+  const ts = new Date().getTime();
+  const outFile = path.join(__dirname, `out_dpi${dpi}_${ts}.pdf`);
+  const options = {
+    dpi,
+    pageSize: "letter",
+    ignore: [
+      /QFont::setPixelSize/,
+      /Warning: Received createRequest signal/,
+      /SSL/,
+    ],
+    debug: true,
+    disableSmartShrinking: true,
+    disableJavascript: true,
+  };
+
+  try {
+    await exportHtml(url, outFile, options);
+    console.log("INFO: Promise fulfilled  - Async code terminated", outFile);
+  } catch (error) {
+    console.log(`ERROR: Handle rejected promise: '${error}' !!!`);
+  }
+});
+
+function exportHtml(url, file, options) {
+  return new Promise((resolve, reject) => {
+    wkhtmltopdf(url, options, (err, stream) => {
+      if (err) {
+        reject(err);
+      } else {
+        stream.pipe(fs.createWriteStream(file));
+        resolve();
+      }
+    });
+  });
+}
 
 app.use("/123", (req, res, next) => {
   wkhtmltopdf("https://vuduong97.github.io/template-html/", {
