@@ -114,7 +114,7 @@ app.get("/pdf", async (req, res) => {
   const outFile = path.join(__dirname, `out_dpi${dpi}_${ts}.pdf`);
   const options = {
     dpi,
-    pageSize: "letter",
+    pageSize: "Letter",
     ignore: [
       /QFont::setPixelSize/,
       /Warning: Received createRequest signal/,
@@ -151,48 +151,18 @@ function exportHtml(url, file, options) {
 }
 
 app.get("/123", async (req, res, next) => {
-  let count = 0;
-  const buffer = await new Promise((resolve, reject) => {
-    wkhtmltopdf(
-      "https://vuduong97.github.io/template-html/",
-      {
-        pageSize: "A4",
-        debug: true,
-      },
-      (error, stream) => {
-        if (error) {
-          // do something with the error
-          return;
-        }
-
-        stream.pipe(writeStream);
-        // do something with the data
-
-        // if (error) {
-        //   console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
-        //   reject(error);
-        // } else {
-        //   let chunks = [];
-        //   stream.on("data", (chunk) => {
-        //     console.log(`🏆 ~ stream.on ~ chunk ${count}: `, chunk);
-        //     count++;
-        //     chunks.push(chunk);
-        //   });
-        //   stream.on("end", () => resolve(chunks));
-        //   // stream.on("error", (err) => {
-        //   //   console.log("error", err);
-        //   //   reject(err);
-        //   // });
-        // }
-      }
-    );
+  res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-disposition": "attachment;filename=certificate.pdf",
   });
 
-  console.log("🏆 ~ buffer ~ buffer:", buffer);
+  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
+    debug: true,
+    pageSize: "Letter",
+    orientation: "Landscape",
+  }).pipe(res);
 
-  return res.status(200).json({
-    message: "Welcome Fan TipJS!",
-  });
+  console.log("All done");
 });
 
 app.use("/", (req, res, next) => {
