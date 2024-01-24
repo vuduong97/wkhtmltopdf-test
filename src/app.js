@@ -6,7 +6,6 @@ const morgan = require("morgan");
 const wkhtmltopdf = require("wkhtmltopdf");
 const path = require("path");
 const fs = require("fs");
-const bl = require("bl");
 
 const app = express();
 
@@ -127,8 +126,7 @@ app.get("/pdf", async (req, res) => {
   };
 
   try {
-    const buffer = await exportHtml(url, outFile, options);
-    console.log("🏆 ~ app.get ~ buffer:", buffer);
+    await exportHtml(url, outFile, options);
     console.log("INFO: Promise fulfilled  - Async code terminated", outFile);
 
     return res.status(200).json({
@@ -145,15 +143,8 @@ function exportHtml(url, file, options) {
       if (err) {
         reject(err);
       } else {
-        stream.pipe(
-          bl((err, data) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(data); // data là một Buffer chứa toàn bộ dữ liệu từ stream
-            }
-          })
-        );
+        stream.pipe(fs.createWriteStream(file));
+        resolve();
       }
     });
   });
