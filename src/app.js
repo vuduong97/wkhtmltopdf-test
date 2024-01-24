@@ -89,17 +89,17 @@ app.get("/test", async (req, res) => {
   // });
 });
 
-app.use("/123", (req, res, next) => {
-  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
-    output: "out.pdf",
-    pageSize: "A4",
-    debug: true,
-  });
+// app.use("/123", (req, res, next) => {
+//   wkhtmltopdf("https://vuduong97.github.io/template-html/", {
+//     output: "out.pdf",
+//     pageSize: "A4",
+//     debug: true,
+//   });
 
-  return res.status(200).json({
-    message: "Welcome Fan TipJS!",
-  });
-});
+//   return res.status(200).json({
+//     message: "Welcome Fan TipJS!",
+//   });
+// });
 
 app.get("/pdf", async (req, res) => {
   const query = req.query;
@@ -150,16 +150,18 @@ function exportHtml(url, file, options) {
   });
 }
 
-app.use("/123", (req, res, next) => {
-  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
-    output: "out.pdf",
-    pageSize: "A4",
-    debug: true,
+app.get("/123", async (req, res, next) => {
+  res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-disposition": "attachment;filename=certificate.pdf",
   });
 
-  return res.status(200).json({
-    message: "Welcome Fan TipJS!",
-  });
+  wkhtmltopdf("https://vuduong97.github.io/template-html/", {
+    pageSize: "A4",
+    debug: true,
+  }).pipe(res);
+
+  console.log("All done");
 });
 
 app.use("/", (req, res, next) => {
