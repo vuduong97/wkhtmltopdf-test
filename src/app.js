@@ -167,11 +167,14 @@ app.get("/123", async (req, res, next) => {
           stream.on("data", (chunk) => {
             chunks.push(chunk);
           });
-          stream.on("end", () => resolve(Buffer.concat(chunks)));
-          stream.on("error", (err) => {
-            console.log("error", err);
-            reject(err);
-          });
+
+          console.log("🏆 ~ buffer ~ chunks:", chunks);
+
+          // stream.on("end", () => resolve(Buffer.concat(chunks)));
+          // stream.on("error", (err) => {
+          //   console.log("error", err);
+          //   reject(err);
+          // });
         }
       }
     );
