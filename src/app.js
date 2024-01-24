@@ -68,13 +68,17 @@ app.get("/test", async (req, res) => {
     );
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  res.set({
-    "Content-Type": "application/pdf",
-    "Content-Disposition": 'attachment; filename="example.pdf"',
+  // res.set({
+  //   "Content-Type": "application/pdf",
+  //   "Content-Disposition": 'attachment; filename="example.pdf"',
+  // });
+  // res.send(buffer);
+
+  return res.status(200).json({
+    message: "Build pdf success!",
   });
-  res.send(buffer);
 });
 
 app.use("/123", (req, res, next) => {
