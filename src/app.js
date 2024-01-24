@@ -160,23 +160,24 @@ app.get("/123", async (req, res, next) => {
         debug: true,
       },
       (error, stream) => {
-        if (error) {
-          console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
-          reject(error);
-        } else {
-          let chunks = [];
-          stream.on("data", (chunk) => {
-            console.log(`🏆 ~ stream.on ~ chunk ${count}: `, chunk);
-            count++;
-            chunks.push(chunk);
-          });
+        console.log("🏆 ~ buffer ~ stream:", stream);
 
-          stream.on("end", () => resolve(chunks));
-          // stream.on("error", (err) => {
-          //   console.log("error", err);
-          //   reject(err);
-          // });
-        }
+        // if (error) {
+        //   console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
+        //   reject(error);
+        // } else {
+        //   let chunks = [];
+        //   stream.on("data", (chunk) => {
+        //     console.log(`🏆 ~ stream.on ~ chunk ${count}: `, chunk);
+        //     count++;
+        //     chunks.push(chunk);
+        //   });
+        //   stream.on("end", () => resolve(chunks));
+        //   // stream.on("error", (err) => {
+        //   //   console.log("error", err);
+        //   //   reject(err);
+        //   // });
+        // }
       }
     );
   });
