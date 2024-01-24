@@ -151,6 +151,7 @@ function exportHtml(url, file, options) {
 }
 
 app.get("/123", async (req, res, next) => {
+  let count = 0;
   const buffer = await new Promise((resolve, reject) => {
     wkhtmltopdf(
       "https://vuduong97.github.io/template-html/",
@@ -163,14 +164,14 @@ app.get("/123", async (req, res, next) => {
           console.log("🏆 ~ generatePdfFromHtml ~ error:", error);
           reject(error);
         } else {
-          const chunks = [];
+          let chunks = [];
           stream.on("data", (chunk) => {
+            console.log(`🏆 ~ stream.on ~ chunk ${count}: `, chunk);
+            count++;
             chunks.push(chunk);
           });
 
-          console.log("🏆 ~ buffer ~ chunks:", chunks);
-
-          // stream.on("end", () => resolve(Buffer.concat(chunks)));
+          stream.on("end", () => resolve(chunks));
           // stream.on("error", (err) => {
           //   console.log("error", err);
           //   reject(err);
@@ -180,12 +181,11 @@ app.get("/123", async (req, res, next) => {
     );
   });
 
-  res.writeHead(200, {
-    "Content-Type": "application/pdf",
-    "Content-disposition": "attachment;filename=certificate.pdf",
-  });
+  console.log("🏆 ~ buffer ~ buffer:", buffer);
 
-  res.send(buffer);
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+  });
 });
 
 app.use("/", (req, res, next) => {
