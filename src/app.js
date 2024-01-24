@@ -128,6 +128,10 @@ app.get("/pdf", async (req, res) => {
   try {
     await exportHtml(url, outFile, options);
     console.log("INFO: Promise fulfilled  - Async code terminated", outFile);
+
+    return res.status(200).json({
+      message: "Build pdf success!",
+    });
   } catch (error) {
     console.log(`ERROR: Handle rejected promise: '${error}' !!!`);
   }
