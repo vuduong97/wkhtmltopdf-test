@@ -8,6 +8,7 @@ async function htmlPuppeteer() {
   // Create a browser instance
   const browser = await puppeteer.launch({
     headless: true,
+    args: ["--no-sandbox"],
   });
 
   // Create a new page
@@ -20,8 +21,7 @@ async function htmlPuppeteer() {
       <meta charset="UTF-8" />
   </head>
 
-  <style>
-      @import url('https://fonts.cdnfonts.com/css/arial-2');  
+  <style> 
       @page {
           margin: 0.3in;
       }
@@ -853,7 +853,7 @@ async function htmlPuppeteer() {
   </body>
 </html>
 `;
-  await page.setContent(html, { waitUntil: "networkidle2" });
+  await page.setContent(html, { waitUntil: "networkidle0" });
   await page.setExtraHTTPHeaders({
     "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
   });
