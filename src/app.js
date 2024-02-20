@@ -5,7 +5,8 @@ const { default: helmet } = require("helmet");
 const morgan = require("morgan");
 const wkhtmltopdf = require("wkhtmltopdf");
 const path = require("path");
-const { htmlToPdfBase64, exportHtml } = require("./utils/html-to-pdf");
+const { htmlPDFTest } = require("./utils/html-to-pdfmake");
+const { htmlPuppeteer } = require("./utils/html-puppeteer");
 
 const app = express();
 
@@ -54,42 +55,21 @@ app.post("/stream", (req, res, next) => {
 });
 
 app.post("/stream2", async (req, res, next) => {
-  const dpi = 270;
-  const ts = new Date().getTime();
-  const outFile = path.join(
-    __dirname,
-    "..",
-    "public",
-    `out_dpi${dpi}_${ts}.pdf`
-  );
-  console.log("🏆 ~ app.post ~ outFile:", outFile);
+  const buffer = await htmlPDFTest();
 
-  const url = "https://vuduong97.github.io/template-html";
-  const options = {
-    dpi,
-    pageSize: "letter",
-    ignore: [
-      /QFont::setPixelSize/,
-      /Warning: Received createRequest signal/,
-      /SSL/,
-    ],
-    debug: true,
-    disableSmartShrinking: true,
-    javascriptDelay: 10000, // to avoid: Warning: Received createRequest signal on a disposed ResourceObject's NetworkAccessManager. This might be an indication of an iframe taking too long to load.
-  };
-  try {
-    await exportHtml(url, outFile, options);
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+    data: buffer,
+  });
+});
 
-    console.log("🏆 ~ app.post ~ outFile:", outFile);
+app.post("/stream3", async (req, res, next) => {
+  await htmlPuppeteer();
 
-    console.log("INFO: Promise fulfilled  - Async code terminated");
-
-    return res.status(200).json({
-      message: "Welcome Fan TipJS!",
-    });
-  } catch (error) {
-    console.log(`ERROR: Handle rejected promise: '${error}' !!!`);
-  }
+  return res.status(200).json({
+    message: "Welcome Fan TipJS!",
+    // data: buffer,
+  });
 });
 
 app.use("/", (req, res, next) => {
